@@ -25,7 +25,8 @@
 #include <GL/glew.h>
 
 // Include GLFW
-#include <glfw3.h>
+//#include <glfw3.h>
+#include <GLFW/glfw3.h>
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -33,6 +34,10 @@
 
 #include <common/shader.hpp>
 #include <common/texture.hpp>
+
+#define _USE_MATH_DEFINES
+
+#include <math.h>
 
 using namespace glm;
 using namespace std;

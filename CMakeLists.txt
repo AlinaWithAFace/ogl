@@ -202,6 +202,29 @@ set_target_properties(tutorial07_model_loading PROPERTIES XCODE_ATTRIBUTE_CONFIG
 create_target_launcher(tutorial07_model_loading WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tutorial07_model_loading/")
 
 # Tutorial 8
+add_executable(hw2
+		multiearth/main.cpp
+		common/shader.cpp
+		common/shader.hpp
+		common/controls.cpp
+		common/controls.hpp
+		common/texture.cpp
+		common/texture.hpp
+		common/objloader.cpp
+		common/objloader.hpp
+		
+		multiearth/TextureFragmentShader.fragmentshader
+		multiearth/TransformVertexShader.vertexshader
+		)
+target_link_libraries(hw2
+		${ALL_LIBS}
+		)
+# Xcode and Visual working directories
+set_target_properties(hw2 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/multiearth/")
+create_target_launcher(hw2 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/multiearth/")
+
+
+# Tutorial 8
 add_executable(tutorial08_basic_shading
 	tutorial08_basic_shading/tutorial08.cpp
 	common/shader.cpp
