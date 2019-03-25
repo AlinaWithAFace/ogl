@@ -56,6 +56,30 @@ add_definitions(
 	-D_CRT_SECURE_NO_WARNINGS
 )
 
+# HW 1
+add_executable(hw1
+		hw1/modified_tutorial03.cpp
+		common/shader.cpp
+		common/shader.hpp
+
+		hw1/MultiColorSimpleTransform.vertexshader
+		hw1/MultiColor.fragmentshader
+		)
+target_link_libraries(hw1
+		${ALL_LIBS}
+		)
+
+# Xcode and Visual working directories
+set_target_properties(hw1 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/hw1/")
+create_target_launcher(hw1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/hw1/") # Visual
+
+
+add_custom_command(
+		TARGET hw1 POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/hw1${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/hw1/"
+)
+
+
 # Tutorial 1
 add_executable(tutorial01_first_window 
 	tutorial01_first_window/tutorial01.cpp
