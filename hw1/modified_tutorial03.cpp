@@ -62,32 +62,32 @@ void draw_polyhedron(glm::mat4, float, float, float);
 // 2 x 2 x 2 cube centered on (0, 0, 0)
 
 void draw_cube(glm::mat4 Model, float r, float g, float b) {
-    // +Z, -Z
+	// +Z, -Z
 
-    draw_square(Model * glm::translate(glm::vec3(0.0f, 0.0f, +1.0f)), r, g, b);
-    draw_square(Model * glm::translate(glm::vec3(0.0f, 0.0f, -1.0f)), 0.5 * r, 0.5 * g, 0.5 * b);
+	draw_square(Model * glm::translate(glm::vec3(0.0f, 0.0f, +1.0f)), r, g, b);
+	draw_square(Model * glm::translate(glm::vec3(0.0f, 0.0f, -1.0f)), 0.5 * r, 0.5 * g, 0.5 * b);
 
-    // +X, -X
+	// +X, -X
 
-    glm::mat4 RY;
-    RY = glm::rotate((float) (0.5 * M_PI),
-                     glm::vec3(0.0f,
-                               1.0f,
-                               0.0f));
+	glm::mat4 RY;
+	RY = glm::rotate((float) (0.5 * M_PI),
+					 glm::vec3(0.0f,
+							   1.0f,
+							   0.0f));
 
-    draw_square(Model * glm::translate(glm::vec3(+1.0f, 0.0f, 0.0f)) * RY, g, b, r);
-    draw_square(Model * glm::translate(glm::vec3(-1.0f, 0.0f, 0.0f)) * RY, 0.5 * g, 0.5 * b, 0.5 * r);
+	draw_square(Model * glm::translate(glm::vec3(+1.0f, 0.0f, 0.0f)) * RY, g, b, r);
+	draw_square(Model * glm::translate(glm::vec3(-1.0f, 0.0f, 0.0f)) * RY, 0.5 * g, 0.5 * b, 0.5 * r);
 
-    // +Y, -Y
+	// +Y, -Y
 
-    glm::mat4 RX;
-    RX = glm::rotate((float) (0.5 * M_PI),
-                     glm::vec3(1.0f,
-                               0.0f,
-                               0.0f));
+	glm::mat4 RX;
+	RX = glm::rotate((float) (0.5 * M_PI),
+					 glm::vec3(1.0f,
+							   0.0f,
+							   0.0f));
 
-    draw_square(Model * glm::translate(glm::vec3(0.0f, +1.0f, 0.0f)) * RX, b, r, g);
-    draw_square(Model * glm::translate(glm::vec3(0.0f, -1.0f, 0.0f)) * RX, 0.5 * b, 0.5 * r, 0.5 * g);
+	draw_square(Model * glm::translate(glm::vec3(0.0f, +1.0f, 0.0f)) * RX, b, r, g);
+	draw_square(Model * glm::translate(glm::vec3(0.0f, -1.0f, 0.0f)) * RX, 0.5 * b, 0.5 * r, 0.5 * g);
 
 }
 
@@ -96,11 +96,11 @@ void draw_cube(glm::mat4 Model, float r, float g, float b) {
 // 2 x 2 square centered on (0, 0)
 
 void draw_square(glm::mat4 Model, float r, float g, float b) {
-    glm::mat4 M = glm::scale(glm::vec3(-1.0f, -1.0f, 0.0f));
+	glm::mat4 M = glm::scale(glm::vec3(-1.0f, -1.0f, 0.0f));
 
-    //  draw_right_triangle(Model * M, 1.0-r, 1.0-g, 1.0-b);
-    draw_right_triangle(Model * M, r, g, b);
-    draw_right_triangle(Model, r, g, b);
+	//  draw_right_triangle(Model * M, 1.0-r, 1.0-g, 1.0-b);
+	draw_right_triangle(Model * M, r, g, b);
+	draw_right_triangle(Model, r, g, b);
 }
 
 //----------------------------------------------------------------------------
@@ -109,10 +109,10 @@ void draw_square(glm::mat4 Model, float r, float g, float b) {
 // top-right at (1, 1)
 
 void draw_right_triangle(glm::mat4 Model, float r, float g, float b) {
-    glm::mat4 S = glm::shearX3D(glm::mat4(1.0f), 0.5f, 0.0f);
-    glm::mat4 T = glm::translate(glm::vec3(-1.0f, 1.0f, 0.0f));
+	glm::mat4 S = glm::shearX3D(glm::mat4(1.0f), 0.5f, 0.0f);
+	glm::mat4 T = glm::translate(glm::vec3(-1.0f, 1.0f, 0.0f));
 
-    draw_triangle(Model * glm::inverse(T) * S * T, r, g, b);
+	draw_triangle(Model * glm::inverse(T) * S * T, r, g, b);
 }
 
 //----------------------------------------------------------------------------
@@ -124,94 +124,94 @@ void draw_right_triangle(glm::mat4 Model, float r, float g, float b) {
 // Refers to globals in section above (but does not change them)
 
 void draw_triangle(glm::mat4 Model, float r, float g, float b) {
-    // Our ModelViewProjection : multiplication of our 3 matrices
-    glm::mat4 MVP = Projection * View * Model;
+	// Our ModelViewProjection : multiplication of our 3 matrices
+	glm::mat4 MVP = Projection * View * Model;
 
-    // make this transform available to shaders
-    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+	// make this transform available to shaders
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-    // 1st attribute buffer : vertices
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glVertexAttribPointer(0,                  // attribute. 0 to match the layout in the shader.
-                          3,                  // size
-                          GL_FLOAT,           // type
-                          GL_FALSE,           // normalized?
-                          0,                  // stride
-                          (void *) 0            // array buffer offset
-    );
+	// 1st attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glVertexAttribPointer(0,                  // attribute. 0 to match the layout in the shader.
+						  3,                  // size
+						  GL_FLOAT,           // type
+						  GL_FALSE,           // normalized?
+						  0,                  // stride
+						  (void *) 0            // array buffer offset
+	);
 
-    // all vertices same color
+	// all vertices same color
 
-    GLfloat g_color_buffer_data[] = {
-            r, g, b,
-            r, g, b,
-            r, g, b,
-    };
+	GLfloat g_color_buffer_data[] = {
+			r, g, b,
+			r, g, b,
+			r, g, b,
+	};
 
-    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 
-    // 2nd attribute buffer : colors
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-    glVertexAttribPointer(1,                                // attribute. 1 to match the layout in the shader.
-                          3,                                // size
-                          GL_FLOAT,                         // type
-                          GL_FALSE,                         // normalized?
-                          0,                                // stride
-                          (void *) 0                          // array buffer offset
-    );
+	// 2nd attribute buffer : colors
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+	glVertexAttribPointer(1,                                // attribute. 1 to match the layout in the shader.
+						  3,                                // size
+						  GL_FLOAT,                         // type
+						  GL_FALSE,                         // normalized?
+						  0,                                // stride
+						  (void *) 0                          // array buffer offset
+	);
 
-    // Draw the triangle !
-    glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
+	// Draw the triangle !
+	glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 }
 
 void draw_polyhedron(glm::mat4 Model, float r, float g, float b) {
-    // Base
-    glm::mat4 RX;
-    glm::vec3 baseVec1 = glm::vec3(1.0f, 0.0f, 0.0f);
-    RX = glm::rotate((float) (0.5 * M_PI), baseVec1);
-    glm::vec3 baseVec2 = glm::vec3(0.0f, -1.0f, 0.0f);
-    draw_square(Model * glm::translate(baseVec2) * RX, 0.5 * b, 0.5 * r, 0.5 * g);
+	// Base
+	glm::mat4 RX;
+	glm::vec3 baseVec1 = glm::vec3(1.0f, 0.0f, 0.0f);
+	RX = glm::rotate((float) (0.5 * M_PI), baseVec1);
+	glm::vec3 baseVec2 = glm::vec3(0.0f, -1.0f, 0.0f);
+	draw_square(Model * glm::translate(baseVec2) * RX, 0.5 * b, 0.5 * r, 0.5 * g);
 
 
-    glm::vec3 eastVec1 = glm::vec3(0.0f, 0.0f, +1.0f);
-    draw_triangle(Model * glm::translate(eastVec1), r, g, b);
+	glm::vec3 eastVec1 = glm::vec3(0.0f, 0.0f, +1.0f);
+	draw_triangle(Model * glm::translate(eastVec1), r, g, b);
 
-    glm::vec3 westVec1 = glm::vec3(0.0f, 0.0f, -1.0f);
-    draw_triangle(Model * glm::translate(westVec1), r, g, b);
+	glm::vec3 westVec1 = glm::vec3(0.0f, 0.0f, -1.0f);
+	draw_triangle(Model * glm::translate(westVec1), r, g, b);
 
 
-    glm::vec3 Y_rotation_vec = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::mat4 RY;
-    RY = glm::rotate((float) (0.5 * M_PI), Y_rotation_vec);
+	glm::vec3 Y_rotation_vec = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::mat4 RY;
+	RY = glm::rotate((float) (0.5 * M_PI), Y_rotation_vec);
 
-    glm::vec3 inwardTiltVec = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::mat4 inwardTiltRotation;
-    inwardTiltRotation = glm::rotate((float) (.5 * M_PI), inwardTiltVec);
+	glm::vec3 inwardTiltVec = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::mat4 inwardTiltRotation;
+	inwardTiltRotation = glm::rotate((float) (.5 * M_PI), inwardTiltVec);
 
-    glm::vec3 southVec1 = glm::vec3(+1.0f, 0.0f, 0.0f);
-    draw_triangle(Model * glm::translate(southVec1) * RY, g, b, r);
-    glm::vec3 northVec1 = glm::vec3(-1.0f, 0.0f, 0.0f);
-    draw_triangle(Model * glm::translate(northVec1) * RY, 0.5 * g, 0.5 * b, 0.5 * r);
+	glm::vec3 southVec1 = glm::vec3(+1.0f, 0.0f, 0.0f);
+	draw_triangle(Model * glm::translate(southVec1) * RY, g, b, r);
+	glm::vec3 northVec1 = glm::vec3(-1.0f, 0.0f, 0.0f);
+	draw_triangle(Model * glm::translate(northVec1) * RY, 0.5 * g, 0.5 * b, 0.5 * r);
 }
 
 void draw_multiple(int numberToDraw, float r, float g, float b) {
-    int space = 3;
-    int columns = static_cast<int>(sqrt(numberToDraw));
-    int numberPerRow = numberToDraw / columns;
+	int space = 3;
+	int columns = static_cast<int>(sqrt(numberToDraw));
+	int numberPerRow = numberToDraw / columns;
 
 
-    for (int i = 0; i < numberPerRow; ++i) {
-        for (int j = 0; j < columns; ++j) {
-            draw_polyhedron(glm::translate(glm::vec3((i * space) - numberPerRow / 2, (j * space) - columns / 2, 0)), r,
-                            g, b);
-        }
-    }
+	for (int i = 0; i < numberPerRow; ++i) {
+		for (int j = 0; j < columns; ++j) {
+			draw_polyhedron(glm::translate(glm::vec3((i * space) - numberPerRow / 2, (j * space) - columns / 2, 0)), r,
+							g, b);
+		}
+	}
 }
 
 
@@ -219,67 +219,67 @@ void draw_multiple(int numberToDraw, float r, float g, float b) {
 //----------------------------------------------------------------------------
 
 int main(void) {
-    // Initialise GLFW
-    if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW\n");
-        getchar();
-        return -1;
-    }
+	// Initialise GLFW
+	if (!glfwInit()) {
+		fprintf(stderr, "Failed to initialize GLFW\n");
+		getchar();
+		return -1;
+	}
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL
 
-    // Open a window and create its OpenGL context
-    window = glfwCreateWindow(1024, 768, "Tutorial 03 - Matrices", NULL, NULL);
-    if (window == NULL) {
-        fprintf(stderr,
-                "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
-        getchar();
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
+	// Open a window and create its OpenGL context
+	window = glfwCreateWindow(1024, 768, "Tutorial 03 - Matrices", NULL, NULL);
+	if (window == NULL) {
+		fprintf(stderr,
+				"Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
+		getchar();
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
 
-    // Initialize GLEW
-    glewExperimental = true; // Needed for core profile
-    if (glewInit() != GLEW_OK) {
-        fprintf(stderr, "Failed to initialize GLEW\n");
-        getchar();
-        glfwTerminate();
-        return -1;
-    }
+	// Initialize GLEW
+	glewExperimental = true; // Needed for core profile
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Failed to initialize GLEW\n");
+		getchar();
+		glfwTerminate();
+		return -1;
+	}
 
-    // Ensure we can capture the escape key being pressed below
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	// Ensure we can capture the escape key being pressed below
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-    // Darker blue background
-    glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
-    glEnable(GL_DEPTH_TEST);
+	// Darker blue background
+	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
+	glEnable(GL_DEPTH_TEST);
 
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
 
-    // Create and compile our GLSL program from the shaders
-    GLuint programID = LoadShaders("MultiColorSimpleTransform.vertexshader", "MultiColor.fragmentshader");
+	// Create and compile our GLSL program from the shaders
+	GLuint programID = LoadShaders("MultiColorSimpleTransform.vertexshader", "MultiColor.fragmentshader");
 
-    // Get a handle for our "MVP" uniform
-    MatrixID = glGetUniformLocation(programID, "MVP");
+	// Get a handle for our "MVP" uniform
+	MatrixID = glGetUniformLocation(programID, "MVP");
 
-    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-    // Or, for an ortho camera :
-    //  Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In camera coordinates
-    //  Projection = glm::ortho(-3.0f,3.0f,-3.0f,3.0f,0.0f,100.0f); // In camera coordinates
+	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+	Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	// Or, for an ortho camera :
+	//  Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In camera coordinates
+	//  Projection = glm::ortho(-3.0f,3.0f,-3.0f,3.0f,0.0f,100.0f); // In camera coordinates
 
-    // Camera matrix -- same for all triangles drawn
-    View = glm::lookAt(glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
-                       glm::vec3(0, 0, 0), // and looks at the origin
-                       glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
+	// Camera matrix -- same for all triangles drawn
+	View = glm::lookAt(glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
+					   glm::vec3(0, 0, 0), // and looks at the origin
+					   glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+	);
 
 
 //    // 'Plan' View
@@ -287,71 +287,71 @@ int main(void) {
 //                       glm::vec3(0, 0, 0),
 //                       glm::vec3(0, 1, 0));
 
-    //Isometric View
+	//Isometric View
 //    View = glm::lookAt(glm::vec3(10, 10, 10),
 //                       glm::vec3(0, 0, 0),
 //                       glm::vec3(0, 1, 0));
 
 
-    // geometry of "template" triangle
+	// geometry of "template" triangle
 
-    static const GLfloat g_vertex_buffer_data[] = {
-            -1.0f, -1.0f, 0.0f,
-            1.0f, -1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-    };
-    static const GLushort g_element_buffer_data[] = {0, 1, 2};
+	static const GLfloat g_vertex_buffer_data[] = {
+			-1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			0.0f, 1.0f, 0.0f,
+	};
+	static const GLushort g_element_buffer_data[] = {0, 1, 2};
 
-    glGenBuffers(1, &vertexbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
-    // handle for color information.  we don't set it here because it can change for each triangle
+	// handle for color information.  we don't set it here because it can change for each triangle
 
-    glGenBuffers(1, &colorbuffer);
+	glGenBuffers(1, &colorbuffer);
 
-    // Model matrix -- changed for each triangle drawn
-    glm::mat4 Model;
+	// Model matrix -- changed for each triangle drawn
+	glm::mat4 Model;
 
-    do {
+	do {
 
-        // Clear the screen
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Clear the screen
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Use our shader
-        glUseProgram(programID);
+		// Use our shader
+		glUseProgram(programID);
 
-        // set model transform and color for each triangle and draw it offscreen
+		// set model transform and color for each triangle and draw it offscreen
 
-        //    move cube up and stretch it a bit
+		//    move cube up and stretch it a bit
 //        draw_cube(glm::scale(glm::vec3(1.0f, 2.0f, 1.0f)) * glm::translate(glm::vec3(0.0f, 1.0f, 0.0f)),
 //                  1.0f, 0.0f, 0.0f);   // red
 
-        draw_polyhedron(glm::scale(glm::vec3(1.0f, 1.0f, 1.0f)) * glm::translate(glm::vec3(0.0f, 0.0f, 0.0f)),
-                        1.0f, 0.0f, 0.0f);   // red
+		draw_polyhedron(glm::scale(glm::vec3(1.0f, 1.0f, 1.0f)) * glm::translate(glm::vec3(0.0f, 0.0f, 0.0f)),
+						1.0f, 0.0f, 0.0f);   // red
 
 
-        //draw_multiple(300, 1.0f, 0.0f, 0.0f);
+		//draw_multiple(300, 1.0f, 0.0f, 0.0f);
 
-        // more/other calls to draw_triangle() ...
+		// more/other calls to draw_triangle() ...
 
-        // Swap buffers
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+		// Swap buffers
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 
-    } // Check if the ESC key was pressed or the window was closed
-    while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-           glfwWindowShouldClose(window) == 0);
+	} // Check if the ESC key was pressed or the window was closed
+	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+		   glfwWindowShouldClose(window) == 0);
 
-    // Cleanup VBO and shader
-    glDeleteBuffers(1, &vertexbuffer);
-    glDeleteProgram(programID);
-    glDeleteVertexArrays(1, &VertexArrayID);
+	// Cleanup VBO and shader
+	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteProgram(programID);
+	glDeleteVertexArrays(1, &VertexArrayID);
 
-    // Close OpenGL window and terminate GLFW
-    glfwTerminate();
+	// Close OpenGL window and terminate GLFW
+	glfwTerminate();
 
-    return 0;
+	return 0;
 }
 
 //----------------------------------------------------------------------------

@@ -2,12 +2,15 @@
 
 // Interpolated values from the vertex shaders
 in vec2 UV;
+in vec3 Position_worldspace;
+in vec3 Normal_cameraspace;
+in vec3 EyeDirection_cameraspace;
+in vec3 LightDirection_cameraspace;
 
 // Ouput data
 out vec3 color;
 
 // Values that stay constant for the whole mesh.
-
 uniform sampler2D tex_elevation;
 uniform sampler2D tex_water;
 uniform sampler2D tex_night;
@@ -16,24 +19,63 @@ uniform sampler2D tex_color;
 
 uniform int draw_mode;
 
-void main(){
+// Values that stay constant for the whole mesh.
+uniform sampler2D myTextureSampler;
+uniform mat4 MV;
+uniform vec3 LightPosition_worldspace;
 
-   if (draw_mode == 0) 
-   	color = vec3(1, 0, 0);
-   else if (draw_mode == 1) 
-   	color = texture( tex_elevation, UV ).bgr;
-   else if (draw_mode == 2) 
-   	color = texture( tex_water, UV ).bgr;
-   else if (draw_mode == 3) 
-   	color = texture( tex_night, UV ).bgr;
-   else if (draw_mode == 4) 
-   	color = texture( tex_clouds, UV ).bgr;
-   else if (draw_mode == 5) 
-   	color = texture( tex_color, UV ).bgr;
+void main() {
 
-  // simple multi-texturing 
+    // Light properties
+    vec3 LightColor = vec3(1, 1, 1);
+    float LightPower = 50.0f;
 
-  else if (draw_mode == 6)
-   	color = mix(texture(tex_clouds,UV).bgr, texture(tex_color,UV).bgr, 0.75);
+    // Material properties
+    vec3 MaterialDiffuseColor = mix(texture(tex_clouds, UV).bgr, texture(tex_color, UV).bgr, 0.75);
+    vec3 MaterialAmbientColor = vec3(0.03, 0.03, 0.03);
+    vec3 MaterialSpecularColor = vec3(0.3, 0.3, 0.3);
 
+    // Normal of the computed fragment, in camera space
+    vec3 n = normalize(Normal_cameraspace);
+
+    // Direction to the light from this fragment
+    vec3 l = normalize(LightDirection_cameraspace);
+
+    // foreshortening factor
+    float cosTheta = clamp(dot(n, l), 0, 1);
+
+    // Eye vector (fragment to camera) &
+    // direction in which light is reflected
+    vec3 E = normalize(EyeDirection_cameraspace);
+    vec3 R = reflect(-l, n);
+
+    // specular parameters
+    float cosAlpha = clamp(dot(E, R), 0, 1);
+    float specExp = 25;
+
+    if (draw_mode == 0) {
+        color = vec3(1, 0, 0);
+    } else if (draw_mode == 1) {
+        color = texture(tex_elevation, UV).bgr;
+    } else if (draw_mode == 2) {
+        color = texture(tex_water, UV).bgr;
+    } else if (draw_mode == 3) {
+        color = texture(tex_night, UV).bgr;
+    } else if (draw_mode == 4) {
+        color = texture(tex_clouds, UV).bgr;
+    } else if (draw_mode == 5) {
+        color = texture(tex_color, UV).bgr;
+    } else if (draw_mode == 6) {
+        // simple multi-texturing
+        color = mix(texture(tex_clouds, UV).bgr, texture(tex_color, UV).bgr, 0.75);
+    } else if (draw_mode == 7) {
+        color = MaterialDiffuseColor * LightColor * cosTheta;
+    } else if (draw_mode == 8) {
+        color = MaterialDiffuseColor * LightColor * cosTheta +
+        (MaterialSpecularColor * LightColor * pow(cosAlpha, specExp) * texture(tex_water, UV).rgb);
+    } else if (draw_mode == 9) {
+        color = mix(
+        MaterialDiffuseColor * LightColor * cosTheta,
+        texture(tex_night, UV).bgr, 1-cosTheta);
+    }
 }
