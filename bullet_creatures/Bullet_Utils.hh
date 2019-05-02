@@ -53,10 +53,13 @@ using namespace glm;
 int bullet_hello_main(int, char **);
 
 void initialize_bullet_simulator();
+
 void delete_bullet_simulator();
 
 void copy_flocker_states_to_graphics_objects();
+
 void copy_graphics_objects_to_flocker_states();
+
 void update_physics_simulation(float);
 
 //----------------------------------------------------------------------------

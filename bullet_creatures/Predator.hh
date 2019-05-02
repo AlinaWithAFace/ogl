@@ -26,18 +26,18 @@
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
-class Predator : public Creature
-{
+class Predator : public Creature {
 public:
-  
-  Predator(int,                    // index
-	   double, double, double, // initial position
-	   double, double, double, // initial velocity
-	   float, float, float,    // base color
-	   int = 1);               // number of past states to save
 
-  void draw(glm::mat4);
-  void update();
+	Predator(int,                    // index
+			 double, double, double, // initial position
+			 double, double, double, // initial velocity
+			 float, float, float,    // base color
+			 int = 1);               // number of past states to save
+
+	void draw(glm::mat4);
+
+	void update();
 
 
 };

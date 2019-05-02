@@ -6,5 +6,5 @@ in vec3 myfragmentColor;
 
 void main()
 {
-	color = myfragmentColor;  
+    color = myfragmentColor;
 }
