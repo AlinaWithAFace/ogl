@@ -24,11 +24,14 @@
 #include <deque>
 #include <string>
 
-#include <sys/time.h>
-#include <unistd.h>
+//#include <sys/times.h>
+
+//#include <unistd.h>
+#include<windows.h>
 
 #include <GL/glew.h>
-#include <glfw3.h>
+//#include <glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>

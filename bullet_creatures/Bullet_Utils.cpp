@@ -13,6 +13,8 @@
 #include "Bullet_Utils.hh"
 #include "Flocker.hh"
 
+#define drand48() (double)rand() / RAND_MAX
+
 using namespace std;
 
 //----------------------------------------------------------------------------

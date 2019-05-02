@@ -21,12 +21,15 @@
 #include <sstream>
 #include <iostream>
 
-#include <unistd.h>
-#include <sys/times.h>
-#include <sys/time.h>
+//#include <unistd.h>
+#include<windows.h>
+
+//#include <sys/times.h>
+//#include <sys/time.h>
 
 #include <GL/glew.h>
-#include <glfw3.h>
+//#include <glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
