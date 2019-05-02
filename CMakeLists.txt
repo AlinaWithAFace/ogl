@@ -17,7 +17,7 @@ endif()
 
 
 
-# Compile external dependencies 
+# Compile external dependencies
 add_subdirectory (external)
 
 # On Visual 2005 and above, this module can set the debug working directory
@@ -81,7 +81,7 @@ add_custom_command(
 
 
 # Tutorial 1
-add_executable(tutorial01_first_window 
+add_executable(tutorial01_first_window
 	tutorial01_first_window/tutorial01.cpp
 )
 target_link_libraries(tutorial01_first_window
@@ -92,11 +92,11 @@ set_target_properties(tutorial01_first_window PROPERTIES XCODE_ATTRIBUTE_CONFIGU
 create_target_launcher(tutorial01_first_window WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tutorial01_first_window/")
 
 # Tutorial 2
-add_executable(tutorial02_red_triangle 
+add_executable(tutorial02_red_triangle
 	tutorial02_red_triangle/tutorial02.cpp
 	common/shader.cpp
 	common/shader.hpp
-	
+
 	tutorial02_red_triangle/SimpleFragmentShader.fragmentshader
 	tutorial02_red_triangle/SimpleVertexShader.vertexshader
 )
@@ -109,7 +109,7 @@ create_target_launcher(tutorial02_red_triangle WORKING_DIRECTORY "${CMAKE_CURREN
 create_default_target_launcher(tutorial02_red_triangle WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tutorial02_red_triangle/") # tut 1 is not the default or people would complain that tut 2 doesn't work
 
 # Tutorial 3
-add_executable(tutorial03_matrices 
+add_executable(tutorial03_matrices
 	tutorial03_matrices/tutorial03.cpp
 	common/shader.cpp
 	common/shader.hpp
@@ -130,7 +130,7 @@ add_executable(tutorial04_colored_cube
 	tutorial04_colored_cube/tutorial04.cpp
 	common/shader.cpp
 	common/shader.hpp
-	
+
 	tutorial04_colored_cube/TransformVertexShader.vertexshader
 	tutorial04_colored_cube/ColorFragmentShader.fragmentshader
 )
@@ -148,7 +148,7 @@ add_executable(tutorial05_textured_cube
 	common/shader.hpp
 	common/texture.cpp
 	common/texture.hpp
-	
+
 	tutorial05_textured_cube/TransformVertexShader.vertexshader
 	tutorial05_textured_cube/TextureFragmentShader.fragmentshader
 )
@@ -168,7 +168,7 @@ add_executable(tutorial06_keyboard_and_mouse
 	common/controls.hpp
 	common/texture.cpp
 	common/texture.hpp
-	
+
 	tutorial06_keyboard_and_mouse/TransformVertexShader.vertexshader
 	tutorial06_keyboard_and_mouse/TextureFragmentShader.fragmentshader
 )
@@ -212,7 +212,7 @@ add_executable(hw2
 		common/texture.hpp
 		common/objloader.cpp
 		common/objloader.hpp
-		
+
 		multiearth/TextureFragmentShader.fragmentshader
 		multiearth/TransformVertexShader.vertexshader
 		)
@@ -235,7 +235,7 @@ add_executable(tutorial08_basic_shading
 	common/texture.hpp
 	common/objloader.cpp
 	common/objloader.hpp
-	
+
 	tutorial08_basic_shading/StandardShading.vertexshader
 	tutorial08_basic_shading/StandardShading.fragmentshader
 )
@@ -259,7 +259,7 @@ add_executable(tutorial09_vbo_indexing
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
-	
+
 	tutorial09_vbo_indexing/StandardShading.vertexshader
 	tutorial09_vbo_indexing/StandardShading.fragmentshader
 )
@@ -281,7 +281,7 @@ add_executable(tutorial09_AssImp
 	common/texture.hpp
 	common/objloader.cpp
 	common/objloader.hpp
-	
+
 	tutorial09_vbo_indexing/StandardShading.vertexshader
 	tutorial09_vbo_indexing/StandardShading.fragmentshader
 )
@@ -307,7 +307,7 @@ add_executable(tutorial09_several_objects
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
-	
+
 	tutorial09_vbo_indexing/StandardShading.vertexshader
 	tutorial09_vbo_indexing/StandardShading.fragmentshader
 )
@@ -331,7 +331,7 @@ add_executable(tutorial10_transparency
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
-	
+
 	tutorial10_transparency/StandardShading.vertexshader
 	tutorial10_transparency/StandardTransparentShading.fragmentshader
 )
@@ -412,7 +412,7 @@ add_executable(tutorial13_normal_mapping
 	common/text2D.cpp
 	common/tangentspace.hpp
 	common/tangentspace.cpp
-	
+
 	tutorial13_normal_mapping/NormalMapping.vertexshader
 	tutorial13_normal_mapping/NormalMapping.fragmentshader
 )
@@ -439,7 +439,7 @@ add_executable(tutorial14_render_to_texture
 	common/vboindexer.hpp
 	common/text2D.hpp
 	common/text2D.cpp
-	
+
 	tutorial14_render_to_texture/StandardShadingRTT.vertexshader
 	tutorial14_render_to_texture/StandardShadingRTT.fragmentshader
 	tutorial14_render_to_texture/Passthrough.vertexshader
@@ -466,7 +466,7 @@ add_executable(tutorial15_lightmaps
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
-	
+
 	tutorial15_lightmaps/TransformVertexShader.vertexshader
 	tutorial15_lightmaps/TextureFragmentShaderLOD.fragmentshader
 )
@@ -490,7 +490,7 @@ add_executable(tutorial16_shadowmaps_simple
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
-	
+
 	tutorial16_shadowmaps/ShadowMapping_SimpleVersion.vertexshader
 	tutorial16_shadowmaps/ShadowMapping_SimpleVersion.fragmentshader
 	tutorial16_shadowmaps/DepthRTT.vertexshader
@@ -547,7 +547,7 @@ add_executable(tutorial17_rotations
 	common/vboindexer.hpp
 	common/quaternion_utils.cpp
 	common/quaternion_utils.hpp
-	
+
 	tutorial17_rotations/StandardShading.vertexshader
 	tutorial17_rotations/StandardShading.fragmentshader
 )
@@ -560,7 +560,7 @@ set_target_properties(tutorial17_rotations PROPERTIES XCODE_ATTRIBUTE_CONFIGURAT
 create_target_launcher(tutorial17_rotations WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tutorial17_rotations/")
 
 # User playground
-add_executable(playground 
+add_executable(playground
 	playground/playground.cpp
 	common/shader.cpp
 	common/shader.hpp
@@ -587,7 +587,7 @@ add_executable(misc05_picking_slow_easy
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
-	
+
 	misc05_picking/StandardShading.vertexshader
 	misc05_picking/StandardShading.fragmentshader
 	misc05_picking/Picking.vertexshader
@@ -614,7 +614,7 @@ add_executable(misc05_picking_custom
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
-	
+
 	misc05_picking/StandardShading.vertexshader
 	misc05_picking/StandardShading.fragmentshader
 )
@@ -639,7 +639,7 @@ add_executable(misc05_picking_BulletPhysics
 	common/objloader.hpp
 	common/vboindexer.cpp
 	common/vboindexer.hpp
-	
+
 	misc05_picking/StandardShading.vertexshader
 	misc05_picking/StandardShading.fragmentshader
 )
@@ -696,7 +696,39 @@ target_link_libraries(tutorial18_particles
 set_target_properties(tutorial18_particles PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/tutorial18_billboards_and_particles/")
 create_target_launcher(tutorial18_particles WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tutorial18_billboards_and_particles/")
 
+###########
 
+# bullet hello
+add_executable(bullet_creatures
+		bullet_creatures/main.cpp
+		bullet_creatures/Creature.cpp
+		bullet_creatures/Flocker.cpp
+		bullet_creatures/Predator.cpp
+		bullet_creatures/Bullet_Utils.cpp
+		common/shader.cpp
+		common/shader.hpp
+		common/controls.cpp
+		common/controls.hpp
+		common/texture.cpp
+		common/texture.hpp
+		common/objloader.cpp
+		common/objloader.hpp
+		common/vboindexer.cpp
+		common/vboindexer.hpp
+
+		bullet_creatures/Creatures.vertexshader
+		bullet_creatures/Creatures.fragmentshader
+		)
+target_link_libraries(bullet_creatures
+		${ALL_LIBS}
+		ANTTWEAKBAR_116_OGLCORE_GLFW
+		BulletDynamics
+		BulletCollision
+		LinearMath
+		)
+# Xcode and Visual working directories
+set_target_properties(bullet_creatures PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bullet_creatures/")
+create_target_launcher(bullet_creatures WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bullet_creatures/")
 
 
 
@@ -814,6 +846,11 @@ add_custom_command(
 add_custom_command(
    TARGET misc05_picking_BulletPhysics POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/misc05_picking_BulletPhysics${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/misc05_picking/"
+)
+
+add_custom_command(
+		TARGET bullet_creatures POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/bullet_creatures${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/bullet_creatures/"
 )
 
 elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
