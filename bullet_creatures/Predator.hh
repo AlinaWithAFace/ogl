@@ -29,6 +29,8 @@
 class Predator : public Creature {
 public:
 
+	glm::vec3 hunger_force;
+
 	Predator(int,                    // index
 			 double, double, double, // initial position
 			 double, double, double, // initial velocity
@@ -38,6 +40,8 @@ public:
 	void draw(glm::mat4);
 
 	void update();
+
+	bool compute_hunger_force();
 
 
 };

@@ -11,7 +11,13 @@
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
+
 #include "Predator.hh"
+
+#define _USE_MATH_DEFINES
+
+#include <math.h>
+#include <iostream>
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
@@ -19,7 +25,7 @@
 //int flocker_history_length = 30;
 //int flocker_draw_mode = DRAW_MODE_POLY;
 //vector<Flocker *> flocker_array;
-//vector<vector<double> > flocker_squared_distance;
+//vector<vector<double> > predator_to_flocker_squared_distance;
 
 vector<Predator *> predator_array;
 int predator_history_length = 30;
@@ -44,6 +50,10 @@ extern GLuint predator_normalbuffer;
 extern GLuint predator_elementbuffer;
 extern vector<unsigned short> predator_indices;
 
+extern vector<Flocker *> flocker_array;
+extern vector<double> predator_to_flocker_squared_distance;
+double random_force_limit = .5;
+
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
@@ -53,6 +63,8 @@ Predator::Predator(int _index,
 				   float r, float g, float b,
 				   int max_hist) :
 		Creature(_index, init_x, init_y, init_z, init_vx, init_vy, init_vz, r, g, b, max_hist) {
+	double F = 0.5 + -0.5 * cos(.1 * 2.0 * M_PI);
+	predator_array[0]->velocity = (float) F * glm::normalize(.5);
 }
 
 //----------------------------------------------------------------------------
@@ -137,6 +149,50 @@ void Predator::draw(glm::mat4 Model) {
 
 //----------------------------------------------------------------------------
 
+/**
+ * attempt to be slightly efficient by pre-calculating all of the distances between
+ * pairs of flockers exactly once
+ */
+//void calculate_predator_to_flocker_squared_distances() {
+//	int i, j;
+//	glm::vec3 diff;
+//
+//	for (i = 0; i < flocker_array.size(); i++) {
+//		diff = flocker_array[i]->position - predator_array[0]->position;
+//		predator_to_flocker_squared_distance[i] = glm::length2(diff);
+//	}
+//}
+
+/**
+ * color makes us hungry
+ * everything's connected
+ * @return
+ */
+bool Predator::compute_hunger_force() {
+
+//	int j;
+	glm::vec3 direction;
+//	int count = 0;
+//	double mag, percent;
+//	double F;
+
+	hunger_force = glm::vec3(0, 0, 0);
+
+	glm::vec3 diff;
+	diff = flocker_array[0]->position - predator_array[0]->position;
+
+	hunger_force = diff;
+
+	//if (count > 0) {
+	hunger_force *= (float) .2;
+
+	return true;
+	//} else
+	//	return false;
+
+}
+
+
 void Predator::update() {
 
 	// set accelerations (aka forces)
@@ -145,18 +201,21 @@ void Predator::update() {
 
 	// deterministic behaviors
 
+	compute_hunger_force();
+	acceleration += hunger_force;
+
 //	compute_separation_force();
 //	acceleration += separation_force;
 //
 //	compute_alignment_force();
 //	acceleration += alignment_force;
 //
-//	compute_cohesion_force();
-//	acceleration += cohesion_force;
+//	compute_hunger_force();
+//	acceleration += hunger_force;
 
 //	draw_color.r = glm::length(separation_force);
 //	draw_color.g = glm::length(alignment_force);
-//	draw_color.b = glm::length(cohesion_force);
+//	draw_color.b = glm::length(hunger_force);
 	if (draw_color.r > 0 || draw_color.g > 0 || draw_color.b > 0)
 		draw_color = glm::normalize(draw_color);
 	else
@@ -164,11 +223,11 @@ void Predator::update() {
 
 	// randomness
 
-//	if (random_force_limit > 0.0) {
-//		acceleration.x += uniform_random(-random_force_limit, random_force_limit);
-//		acceleration.y += uniform_random(-random_force_limit, random_force_limit);
-//		acceleration.z += uniform_random(-random_force_limit, random_force_limit);
-//	}
+	if (random_force_limit > 0.0) {
+		acceleration.x += uniform_random(-random_force_limit, random_force_limit);
+		acceleration.y += uniform_random(-random_force_limit, random_force_limit);
+		acceleration.z += uniform_random(-random_force_limit, random_force_limit);
+	}
 
 	// update velocity
 
@@ -184,6 +243,7 @@ void Predator::update() {
 
 	new_position = position + new_velocity;   // scale new_velocity by dt?
 
+	printf("%s\n", velocity);
 }
 
 //----------------------------------------------------------------------------
