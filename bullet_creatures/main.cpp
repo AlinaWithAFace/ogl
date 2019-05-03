@@ -94,6 +94,7 @@ vector<glm::vec3> obj_vertices;
 vector<glm::vec2> obj_uvs;
 vector<glm::vec3> obj_normals;
 GLuint obj_Texture;
+
 vector<unsigned short> obj_indices;
 vector<glm::vec3> obj_indexed_vertices;
 vector<glm::vec2> obj_indexed_uvs;
@@ -102,6 +103,28 @@ GLuint obj_vertexbuffer;
 GLuint obj_uvbuffer;
 GLuint obj_normalbuffer;
 GLuint obj_elementbuffer;
+
+
+GLuint predMatrixID;
+GLuint predViewMatrixID;
+GLuint predModelMatrixID;
+GLuint predTextureID;
+GLuint predLightID;
+
+vector<glm::vec3> predator_vertices;
+vector<glm::vec2> predator_uvs;
+vector<glm::vec3> predator_normals;
+GLuint predator_texture;
+
+vector<unsigned short> predator_indices;
+vector<glm::vec3> predator_indexed_vertices;
+vector<glm::vec2> predator_indexed_uvs;
+vector<glm::vec3> predator_indexed_normals;
+GLuint predator_vertexbuffer;
+GLuint predator_uvbuffer;
+GLuint predator_normalbuffer;
+GLuint predator_elementbuffer;
+
 
 // these along with Model matrix make MVP transform
 
@@ -131,11 +154,15 @@ int win_h = win_scale_factor * 9.0;
 int camera_mode = CAMERA_MODE_ORBIT;
 
 int num_flockers = 50;   // 400 is "comfortable" max on my machine
+int num_predators = 1;
 
 extern int flocker_history_length;
 extern int flocker_draw_mode;
 extern vector<Flocker *> flocker_array;
 extern vector<vector<double> > flocker_squared_distance;
+
+extern vector<Predator *> predator_array;
+extern int predator_history_length;
 
 GLuint box_vertexbuffer;
 GLuint box_colorbuffer;
@@ -370,25 +397,32 @@ void initialize_flocking_simulation() {
 	flocker_array.clear();
 
 	for (int i = 0; i < num_flockers; i++) {
-		flocker_array.push_back(new Flocker(i,
-											uniform_random(0, box_width), uniform_random(0, box_height),
-											uniform_random(0, box_depth),
-											uniform_random(-0.01, 0.01), uniform_random(-0.01, 0.01),
-											uniform_random(-0.01, 0.01),
-											0.002,            // randomness
-											0.05, 0.5,
-											uniform_random(0.01, 0.03),  // min, max separation distance, weight
-											0.5, 1.0,
-											uniform_random(0.0005, 0.002), // min, max alignment distance, weight
-											1.0, 1.5,
-											uniform_random(0.0005, 0.002), // min, max cohesion distance, weight
-				//					  0.05, 0.5, 0.02,  // min, max separation distance, weight
-				//					  0.5,  1.0, 0.001, // min, max alignment distance, weight
-				//					  1.0,  1.5, 0.001, // min, max cohesion distance, weight
-											1.0, 1.0, 1.0,
-											flocker_history_length));
+		flocker_array.push_back(
+				new Flocker(i,
+							uniform_random(0, box_width), uniform_random(0, box_height), uniform_random(0, box_depth),
+							uniform_random(-0.01, 0.01), uniform_random(-0.01, 0.01), uniform_random(-0.01, 0.01),
+							0.002,            // randomness
+							0.05, 0.5,
+							uniform_random(0.01, 0.03),  // min, max separation distance, weight
+							0.5, 1.0,
+							uniform_random(0.0005, 0.002), // min, max alignment distance, weight
+							1.0, 1.5,
+							uniform_random(0.0005, 0.002), // min, max cohesion distance, weight
+						//					  0.05, 0.5, 0.02,  // min, max separation distance, weight
+						//					  0.5,  1.0, 0.001, // min, max alignment distance, weight
+						//					  1.0,  1.5, 0.001, // min, max cohesion distance, weight
+							1.0, 1.0, 1.0,
+							flocker_history_length));
 
 		flocker_squared_distance[i].resize(num_flockers);
+	}
+	for (int j = 0; j < num_predators; j++) {
+		predator_array.push_back(
+				new Predator(j,
+							 uniform_random(0, box_width), uniform_random(0, box_height), uniform_random(0, box_depth),
+							 uniform_random(-0.01, 0.01), uniform_random(-0.01, 0.01), uniform_random(-0.01, 0.01),
+							 1.0, 1.0, 1.0,
+							 predator_history_length));
 	}
 }
 
@@ -407,6 +441,10 @@ void update_flocking_simulation() {
 
 	for (i = 0; i < flocker_array.size(); i++)
 		flocker_array[i]->update();
+
+	for (int j = 0; j < predator_array.size(); j++) {
+		predator_array[j]->update();
+	}
 
 	// handle wrapping and make new position, velocity into current
 
@@ -464,6 +502,9 @@ void load_objects_and_textures(int argc, char **argv) {
 		exit(1);
 	}
 
+	loadOBJ("banana.obj", predator_vertices, predator_uvs, predator_normals);
+	predator_texture = loadBMP_custom("banana.bmp");
+
 	// if not doing bullet demo, scale down objects to creature size -- kind of eye-balled this
 
 	if (argc < 3) {
@@ -477,6 +518,9 @@ void load_objects_and_textures(int argc, char **argv) {
 	indexVBO(obj_vertices, obj_uvs, obj_normals, obj_indices, obj_indexed_vertices, obj_indexed_uvs,
 			 obj_indexed_normals);
 
+	indexVBO(predator_vertices, predator_uvs, predator_normals, predator_indices, predator_indexed_vertices, predator_indexed_uvs,
+			 predator_indexed_normals);
+
 	// Load into array buffers
 
 	glGenBuffers(1, &obj_vertexbuffer);
@@ -484,19 +528,37 @@ void load_objects_and_textures(int argc, char **argv) {
 	glBufferData(GL_ARRAY_BUFFER, obj_indexed_vertices.size() * sizeof(glm::vec3), &obj_indexed_vertices[0],
 				 GL_STATIC_DRAW);
 
+	glGenBuffers(1, &predator_vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, predator_vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, predator_indexed_vertices.size() * sizeof(glm::vec3), &predator_indexed_vertices[0],
+				 GL_STATIC_DRAW);
+
 	glGenBuffers(1, &obj_uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, obj_uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, obj_indexed_uvs.size() * sizeof(glm::vec2), &obj_indexed_uvs[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &predator_uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, predator_uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, predator_indexed_uvs.size() * sizeof(glm::vec2), &predator_indexed_uvs[0], GL_STATIC_DRAW);
 
 	glGenBuffers(1, &obj_normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, obj_normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, obj_indexed_normals.size() * sizeof(glm::vec3), &obj_indexed_normals[0],
 				 GL_STATIC_DRAW);
 
+	glGenBuffers(1, &predator_normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, predator_normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, predator_indexed_normals.size() * sizeof(glm::vec3), &predator_indexed_normals[0],
+				 GL_STATIC_DRAW);
+
 	// Generate a buffer for the indices as well
 	glGenBuffers(1, &obj_elementbuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, obj_elementbuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, obj_indices.size() * sizeof(unsigned short), &obj_indices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &predator_elementbuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, predator_elementbuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, predator_indices.size() * sizeof(unsigned short), &predator_indices[0], GL_STATIC_DRAW);
 }
 
 //----------------------------------------------------------------------------
@@ -574,6 +636,13 @@ int main(int argc, char **argv) {
 	objTextureID = glGetUniformLocation(objprogramID, "myTextureSampler");
 	objLightID = glGetUniformLocation(objprogramID, "LightPosition_worldspace");
 
+	predMatrixID = glGetUniformLocation(objprogramID, "MVP");
+	predViewMatrixID = glGetUniformLocation(objprogramID, "V");
+	predModelMatrixID = glGetUniformLocation(objprogramID, "M");
+
+	predTextureID = glGetUniformLocation(objprogramID, "myTextureSampler");
+	predLightID = glGetUniformLocation(objprogramID, "LightPosition_worldspace");
+
 	// Use our shader
 
 	glUseProgram(programID);
@@ -645,6 +714,10 @@ int main(int argc, char **argv) {
 
 		for (int i = 0; i < flocker_array.size(); i++)
 			flocker_array[i]->draw(M);
+
+		for (int j = 0; j < predator_array.size(); j++) {
+			predator_array[j]->draw(M);
+		}
 
 		// busy wait if we are going too fast
 
