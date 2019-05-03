@@ -63,8 +63,6 @@ Predator::Predator(int _index,
 				   float r, float g, float b,
 				   int max_hist) :
 		Creature(_index, init_x, init_y, init_z, init_vx, init_vy, init_vz, r, g, b, max_hist) {
-	double F = 0.5 + -0.5 * cos(.1 * 2.0 * M_PI);
-	predator_array[0]->velocity = (float) F * glm::normalize(.5);
 }
 
 //----------------------------------------------------------------------------
