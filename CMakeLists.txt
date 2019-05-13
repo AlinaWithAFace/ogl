@@ -731,14 +731,41 @@ set_target_properties(bullet_creatures PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_
 create_target_launcher(bullet_creatures WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bullet_creatures/")
 
 
+# game-study
+add_executable(game-study
+		game-study/main.cpp
+		game-study/main.h
+
+		common/shader.cpp
+		common/shader.hpp
+		common/controls.cpp
+		common/controls.hpp
+		common/texture.cpp
+		common/texture.hpp
+		common/objloader.cpp
+		common/objloader.hpp
+		common/vboindexer.cpp
+		common/vboindexer.hpp
+		common/text2D.hpp
+		common/text2D.cpp
+
+		game-study/StandardShading.vertexshader
+		game-study/StandardShading.fragmentshader
+		game-study/TextVertexShader.vertexshader
+		game-study/TextVertexShader.fragmentshader
+		)
+
+target_link_libraries(game-study
+		${ALL_LIBS}
+		)
+
+# Xcode and Visual working directories
+set_target_properties(game-study PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/game-study/")
+create_target_launcher(game-study WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/game-study/")
 
 
 
-
-
-
-
-SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
+		SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
 
